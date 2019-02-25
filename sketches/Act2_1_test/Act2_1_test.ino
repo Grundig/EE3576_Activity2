@@ -4,13 +4,13 @@ Act2_1 sys;
 
 void setup() {
   // put your setup code here, to run once:
-  int start_pin = 
-  int stop_pin = 
-  int reverse_pin = 
-  int analog_pin = 
-  int motor_pin = 
-  int direction_pin = 
-  int speed_pin = 
+  int start_pin = 3;
+  int stop_pin = 4;
+  int reverse_pin = 2;
+  int analog_pin = A0;
+  int motor_pin = 9;
+  int direction_pin = 8;
+  int speed_pin = 7;
   
   int check_time = 10;
   

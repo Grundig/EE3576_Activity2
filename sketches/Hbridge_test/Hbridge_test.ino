@@ -7,8 +7,8 @@ IntervalCheckTimer reverse_speed_check;
 void setup()
 {
  // motor to be controlled: it does not have pushbuttons
-  int motorpin=11;
-  int directionpin=12;
+  int motorpin=9;
+  int directionpin=8;
   // enable motor pin
   motor.setup_HBridgeDCmotor(motorpin, directionpin);
   

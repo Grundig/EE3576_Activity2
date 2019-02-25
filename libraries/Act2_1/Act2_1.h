@@ -1,7 +1,7 @@
 #ifndef Act2_1_h
 #define Act2_1_h
 
-#include<Aduino.h>
+#include<Arduino.h>
 #include<Basic_Input.h> 
 #include<PushButton.h>
 #include<IntervalCheckTimer.h>
@@ -158,7 +158,7 @@ class Act2_1{
     			}
 		}
 		
-		overall_system_execute_task()
+		system_execute()
 		{
 			if (isEnabled())
 			{
