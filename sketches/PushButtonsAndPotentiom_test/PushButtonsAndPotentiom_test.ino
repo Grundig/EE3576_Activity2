@@ -28,9 +28,9 @@ void setup()
   // and the pin on diagonally-opposite corner to a digital pin
   //
   
-  int start_pin=8;
-  int stop_pin=10;
-  int reverse_pin=12;
+  int start_pin=5;
+  int stop_pin=4;
+  int reverse_pin=2;
   
   in_push_button start_but(start_pin,switch_on);
   in_push_button stop_but(stop_pin,switch_off);
@@ -51,7 +51,7 @@ void setup()
   //
   
   // initialize the potentiometer pin to an Analog input pin
-  motor_potentiometer.setup_in_analog(A3);
+  motor_potentiometer.setup_in_analog(A0);
   
   // set the time (ms) between input checks
   //buttons

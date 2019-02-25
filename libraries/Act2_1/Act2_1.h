@@ -32,24 +32,24 @@ class Act2_1{
 		
 		Act2_1()
 		{
-			enabled = false
+			//enabled = false;
 		}
 		
-		bool isEnabled()
-		{
-			if (pushbuttons_enabled && potentiometer_enabled && time_enabled && motor_enabled && speed_enabled)
-			{
-				enabled = true;
-				return enabled;
-			}
-			
-			return enabled;
-		}
+//		bool isEnabled()
+//		{
+//			if (pushbuttons_enabled && potentiometer_enabled && time_enabled && motor_enabled && speed_enabled)
+//			{
+//				enabled = true;
+//				return enabled;
+//			}
+//			
+//			return enabled;
+//		}
 		
 		void setup_pushbuttons(int start_pin, int stop_pin, int reverse_pin)
 		{
-			if (!isEnabled())
-			{
+//			if (!isEnabled())
+//			{
 				// Set long push
 				unsigned long int mininterval_ms=2000;
 			
@@ -64,13 +64,13 @@ class Act2_1{
   				motor_pushbuttons.add_in_push_button(reverse_but);
   			
   				pushbuttons_enabled = true;
-  			}
+  			//}
 		}
 		
 		void setup_potentiometer(int analog_pin)
 		{
-			if(!isEnabled())
-			{
+//			if(!isEnabled())
+//			{
 				// setup potentiometer
 				motor_potentiometer.setup_in_analog(analog_pin);
 			
@@ -78,39 +78,39 @@ class Act2_1{
 				potent_map.setup_map(map_min_val, map_max_val);
 			
 				potentiometer_enabled = true;
-			}
+		//	}
 		}
 		
 		void set_time_between_input_checks(int check_time)
 		{
-			if(!isEnabled())
-			{
+//			if(!isEnabled())
+//			{
 				//buttons
   				check_inp_time.setInterCheck(check_time);
   			
   				time_enabled = true;
-  			}
+  		//	}
 		}
 		
 		void setup_motor(int motor_pin, int direction_pin)
 		{
-			if(!isEnabled())
-			{
+			//if(!isEnabled())
+			//{
 				motor.setup_HBridgeDCmotor(motor_pin, direction_pin);
 			
 				motor_enabled = true;
-			}
+			//}
 		}
 		
 		void setup_speed_measure(int speed_pin)
 		{
-			if(!isEnabled())
-			{
+		//	if(!isEnabled())
+			//{
 				rotation_counter.setupSpeedMeasure(speed_pin);
 				speed_check.setInterCheck(speed_control_ms);
 				
 				speed_enabled = true;
-			}
+			//}
 		}
 		
 		void motor_direction(command_list_enum in_smpl_cmd)
@@ -135,7 +135,7 @@ class Act2_1{
         		default:
           		Serial.println("Unknown button pressed");
           		break;
-
+			}
 		}
 		
 		void motor_speed(int val)
@@ -143,25 +143,25 @@ class Act2_1{
 			motor.setSpeedPWM(val);
 		}
 		
-		void read_motor_speed()
-		{
-			double RPM=rotation_counter.getRPMandUpdate();
-    			if(RPM>0)
-    			{
-    				Serial.print("revs per min = ");
-    				Serial.println(RPM);
-    			}
-    					
-    			else
-    			{
-    				Serial.println("Reading speed failed");
-    			}
-		}
+//		void read_motor_speed()
+//		{
+//			double RPM=rotation_counter.getRPMandUpdate();
+//    			if(RPM>0)
+//    			{
+//    				Serial.print("revs per min = ");
+//    				Serial.println(RPM);
+//    			}
+//    					
+//    			else
+//    			{
+//    				Serial.println("Reading speed failed");
+//    			}
+//		}
 		
 		system_execute()
 		{
-			if (isEnabled())
-			{
+			//if (isEnabled())
+			//{
 				// check buttons as often as needed
   				if(check_inp_time.isMinChekTimeElapsedAndUpdate()) 
   				{
@@ -174,16 +174,28 @@ class Act2_1{
   				
   					if (success_command && success_val)
   					{
+  						Serial.println("have inputs v2");
+  						
   						motor_direction(in_smpl_cmd);
   						motor_speed(val);
   					}
   					
   					if (speed_check.isMinChekTimeElapsedAndUpdate())
   					{
-  						read_motor_speed();
+  						double RPM=rotation_counter.getRPMandUpdate();
+    					if(RPM>0)
+    					{
+    						Serial.print("revs per min = ");
+    						Serial.println(RPM);
+    					}
+    					
+    					else
+    					{
+    						Serial.println("Reading speed failed");
+    					}
   					}
   				}
-  			}
+  			//}
 		}
 };
 
