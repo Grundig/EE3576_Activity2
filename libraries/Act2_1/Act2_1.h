@@ -6,7 +6,8 @@
 #include<PushButton.h>
 #include<IntervalCheckTimer.h>
 #include<DCmotor.h>
-#include <InterruptBasedSpeedMeasure.h>
+#include<InterruptBasedSpeedMeasure.h>
+#include<InterruptBasedInputs.h>
 
 class Act2_1{
 	
@@ -102,7 +103,7 @@ class Act2_1{
 			//}
 		}
 		
-		void setup_speed_measure(int speed_pin)
+		void setup_speed_measure(ArduinoInterruptNames speed_pin)
 		{
 		//	if(!isEnabled())
 			//{
@@ -143,20 +144,20 @@ class Act2_1{
 			motor.setSpeedPWM(val);
 		}
 		
-//		void read_motor_speed()
-//		{
-//			double RPM=rotation_counter.getRPMandUpdate();
-//    			if(RPM>0)
-//    			{
-//    				Serial.print("revs per min = ");
-//    				Serial.println(RPM);
-//    			}
-//    					
-//    			else
-//    			{
-//    				Serial.println("Reading speed failed");
-//    			}
-//		}
+		void read_motor_speed()
+		{
+			double RPM=rotation_counter.getRPMandUpdate();
+    			if(RPM>0)
+    			{
+    				Serial.print("revs per min = ");
+    				Serial.println(RPM);
+    			}
+    					
+    			else
+    			{
+    				Serial.println("Reading speed failed");
+    			}
+		}
 		
 		system_execute()
 		{
@@ -170,7 +171,12 @@ class Act2_1{
     				int val;
   					
   					success_command = motor_pushbuttons.check_n_get_command(in_smpl_cmd);
-  					success_val = potent_map.read_input(val);
+  					success_val = potent_map.read_input(val); 
+  					
+  					if(success_val)
+  					{
+  						Serial.print("sv");
+  					}
   				
   					if (success_command && success_val)
   					{
@@ -182,29 +188,12 @@ class Act2_1{
   					
   					if (speed_check.isMinChekTimeElapsedAndUpdate())
   					{
-  						double RPM=rotation_counter.getRPMandUpdate();
-    					if(RPM>0)
-    					{
-    						Serial.print("revs per min = ");
-    						Serial.println(RPM);
-    					}
-    					
-    					else
-    					{
-    						Serial.println("Reading speed failed");
-    					}
+  						read_motor_speed();
   					}
   				}
   			//}
 		}
 };
-
-
-
-
-
-
-
 
 
 #endif

@@ -10,7 +10,7 @@ void setup() {
   int analog_pin = A0;
   int motor_pin = 9;
   int direction_pin = 8;
-  int speed_pin = 3;
+  int speed_pin = int_1;   // Pin 3
   
   int check_time = 10;
   
