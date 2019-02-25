@@ -27,4 +27,5 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   our_sys.system_execute();
+  delay(1000);
 }

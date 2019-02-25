@@ -11,6 +11,7 @@ inputs motor_pushbuttons;
 
 // this is the potentiometer
 in_analog motor_potentiometer;
+in_analogWmapping pot_map;
 
 // these help us read  inputs at appropriate intervals
 IntervalCheckTimer buttons_check;
@@ -52,6 +53,8 @@ void setup()
   
   // initialize the potentiometer pin to an Analog input pin
   motor_potentiometer.setup_in_analog(A0);
+
+  pot_map.setup_map(0, 100);
   
   // set the time (ms) between input checks
   //buttons
@@ -111,19 +114,26 @@ void loop()
  // check the potentiometer when needed 
  if(potentiom_check.isMinChekTimeElapsedAndUpdate())
   {
-    int readval;
-    boolean success;
+    int readval, readvalm;
+    boolean success1;
     
     //Serial.println("Checking potentiometer");
     
     // verify the  new input. This is written to "readval"
-    success=motor_potentiometer.read_input(readval);
+    success1=motor_potentiometer.read_input(readval);
     // success = false if setup_in_analog() was not done 
-    if(success)
+    if(success1)
     {
       Serial.print("Potentiometer Input value = ");
       Serial.println(readval);
     }
+
+    readvalm = map(readval,0,1024,0,100);
+    // success = false if setup_in_analog() was not done 
+
+    Serial.print("Mapped val = ");
+    Serial.println(readvalm);
+    
     
   }
   
