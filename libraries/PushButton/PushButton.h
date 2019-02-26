@@ -27,9 +27,12 @@ enum command_list_enum
 	// these may e useful for the temperature
 	up_fix_amount, down_fix_amount,
 
-	// motor control
+	// motor direction control
 	start, stop, reverse,
 
+	// motor speed control
+	low, mid, high,
+	
 	//
 	simple_last
 

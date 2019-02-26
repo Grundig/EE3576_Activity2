@@ -26,17 +26,17 @@ void setup()
 
   // add three pushbuttons (pin and label)
   // change the pin number as appropriate but keep the labels (switch_on, switch_off, change_spin_dir)
-  testsystem.add_buttonpin_and_label(6, switch_on);
-  testsystem.add_buttonpin_and_label(4, switch_off);
-  testsystem.add_buttonpin_and_label(7, change_spin_dir);
+  testsystem.add_buttonpin_and_label(4, switch_on);
+  testsystem.add_buttonpin_and_label(5, switch_off);
+  testsystem.add_buttonpin_and_label(6, change_spin_dir);
 
   // setup the Hbridgemotor
-  int pwmmotorpin=11;
-  int directionpin=12;
+  int pwmmotorpin=9;
+  int directionpin=8;
   testsystem.setup_HBridgeDCmotor(pwmmotorpin, directionpin);
   
   // setup the speed measuring unit on pin 2 (interrupt 0)
-  testsystem.setupSpeedMeasure(int_0);
+  testsystem.setupSpeedMeasure(int_1);
 
   // adjust the itervals between 
   //two speed-adjustments; two taget-speed checks; two button checks; 
@@ -56,4 +56,5 @@ void setup()
 void loop()
 {
   testsystem.CheckInputsAndControlMotor();
+  delay(1000);
 }

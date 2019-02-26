@@ -172,7 +172,7 @@ class Act2_1{
     			}
 		}
 		
-		// Execute the system
+		// Execute the system task
 		system_execute()
 		{
 			if (isEnabled())
@@ -189,12 +189,16 @@ class Act2_1{
   					success_val = motor_potentiometer.read_input(val); 
   					
   					// Map potentiometer value
-  					mapped_val = map(val, 0, 1024, map_min_val, map_max_val);
-  					
-  					// Motor output, direction and speed
-  					if (success_command && success_val)
-  					{
+  					mapped_val = map(val, 0, 1023, map_min_val, map_max_val);
+
+					// Output motor direction and speed
+					if(success_command)
+					{
   						motor_direction(in_smpl_cmd);
+  					}
+  					
+  					if(success_val)
+  					{
   						motor_speed(mapped_val);
   					}
   					
