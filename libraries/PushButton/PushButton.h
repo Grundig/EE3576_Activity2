@@ -28,8 +28,8 @@ enum command_list_enum
 	up_fix_amount, down_fix_amount,
 
 	// motor direction control
-	start, stop, reverse,
-
+	start, stop, reverse, 
+	
 	// motor speed control
 	low, mid, high,
 	
@@ -37,6 +37,8 @@ enum command_list_enum
 	simple_last
 
 };
+
+
 
 class simple_command{
 private:

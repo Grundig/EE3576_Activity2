@@ -8,6 +8,7 @@
 #include<basic_speed_PID.h>
 #include<DCmotor.h>
 
+
 class Act2_2{
 	
 	protected:
@@ -18,9 +19,10 @@ class Act2_2{
 		inputs pushbuttons;
 		HBridgeDCmotor HBmotor;
 		InterruptSpeedMeasure rotate_count;
-		
 		IntervalCheckTimer button_time_check, adjust_speed_interval, target_speed_check;
 		
+		
+				
 		// Values
 		double motor_low_speed = 1800;  // 30% rated speed (6000 rpm)
 		double motor_mid_speed = 3000;  // 50% rated speed
@@ -35,7 +37,19 @@ class Act2_2{
 		// Set up direction push buttons
 		void setup_motor_pushbuttons(int start_pin, int stop_pin, int reverse_pin)
 		{
-			task1.setup_pushbuttons(start_pin, stop_pin, reverse_pin);
+			// Set long push
+			unsigned long int mininterval_ms=2000;
+			
+			// Labelling and assigning each pin
+  			in_push_button start_but(start_pin, start, mininterval_ms);
+  			in_push_button stop_but(stop_pin, stop, mininterval_ms);
+  			in_push_button reverse_but(reverse_pin, reverse, mininterval_ms);
+  			
+  			// Add push button into system
+  			pushbuttons.add_in_push_button(start_but);
+ 			pushbuttons.add_in_push_button(stop_but);
+  			pushbuttons.add_in_push_button(reverse_but);
+  			
 		}
 		
 		// Set up speed push buttons
@@ -77,10 +91,25 @@ class Act2_2{
 		}
 		
 		// Determine motor speed command (low, mid, high) from pushbuttons
-		void motor_speed_input(command_list_enum in_smpl_cmd_speed)
+		void motor_speed_input(command_list_enum in_smpl_cmd)
 		{
-			switch (in_smpl_cmd_speed)
+			switch (in_smpl_cmd)
 			{
+				case start:
+        		Serial.println(" Start button pressed");
+        		HBmotor.start();
+        		break;
+        		
+        		case stop:
+        		Serial.println("    Stop button pressed");  
+        		HBmotor.stop();
+        		break;
+        		
+        		case reverse:
+        		Serial.println("        Reverse button pressed");
+        		HBmotor.changedir();
+        		break;
+        
         		case low:
         		Serial.println(" Low button pressed");
         		task1.motor_speed(motor_low_speed);
@@ -124,26 +153,25 @@ class Act2_2{
 			// Check buttons
 			if (button_time_check.isMinChekTimeElapsedAndUpdate())
 			{
-				command_list_enum in_smpl_cmd, in_smpl_cmd_speed;
+				command_list_enum in_smpl_cmd;				
 				bool success_command_direction, success_speed, success_command_speed;
 				double curr_speed;
 				double pid_out;
 				double target_speed = motor_low_speed;  // CAN BE ADJUSTED
 				
 				// Get motor command and output
-				success_command_direction = pushbuttons.check_n_get_command(in_smpl_cmd);
+          		success_command_direction = pushbuttons.check_n_get_command(in_smpl_cmd);
+				// Get motor speed command and output
+				success_command_speed = pushbuttons.check_n_get_command(in_smpl_cmd);
 				
 				if (success_command_direction)
 				{
-					task1.motor_direction(in_smpl_cmd);
+					motor_speed_input(in_smpl_cmd);
 				}
-				
-				// Get motor speed command and output
-				success_command_speed = pushbuttons.check_n_get_command(in_smpl_cmd_speed);
 				
 				if (success_command_speed)
 				{
-					task1.motor_direction(in_smpl_cmd_speed);
+					motor_speed_input(in_smpl_cmd);
 				}
 				
 				// Get current speed, use adjust speed interval
@@ -162,6 +190,7 @@ class Act2_2{
 				// Send value to screen using serial print plotter
 				plotter.appendval(pid_out, curr_speed, target_speed);
 				plotter.print_the_string();
+
 			}
 			
 		}		
