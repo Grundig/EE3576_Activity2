@@ -95,22 +95,18 @@ class Act2_2{
 		}
 		
 		// Determine motor speed command (low, mid, high) from pushbuttons
-		double motor_speed_input(command_list_enum in_smpl_cmd)
-		{
-			double target_speed;
-			
+		void motor_speed_input(command_list_enum in_smpl_cmd)
+		{	
 			switch (in_smpl_cmd)
 			{
 				case start:
         		Serial.println(" Start button pressed");
         		HBmotor.start();
-        		target_speed = motor_low_speed_rpm;
         		break;
         		
         		case stop:
         		Serial.println("    Stop button pressed");  
         		HBmotor.stop();
-        		target_speed = 0;
         		break;
         		
         		case reverse:
@@ -121,19 +117,16 @@ class Act2_2{
         		case low:
         		Serial.println(" Low button pressed");
         		HBmotor.setSpeedPWM(motor_low_speed);
-        		target_speed = motor_low_speed_rpm;
         		break;
         		
         		case mid:
         		Serial.println("    Mid button pressed");  
         		HBmotor.setSpeedPWM(motor_mid_speed);
-        		target_speed = motor_mid_speed_rpm;
         		break;
         		
         		case high:
         		Serial.println("        High button pressed");
         		HBmotor.setSpeedPWM(motor_high_speed);
-        		target_speed = motor_high_speed_rpm;
         		break;
         		
         		default:
@@ -141,7 +134,6 @@ class Act2_2{
           		break;
 			}
 			
-			return target_speed;
 		}
 		
 		double read_motor_speed()
@@ -186,7 +178,7 @@ class Act2_2{
 				
 				if (success_command_speed)
 				{
-					target_speed = motor_speed_input(in_smpl_cmd);
+					motor_speed_input(in_smpl_cmd);
 				}
 				
 			}

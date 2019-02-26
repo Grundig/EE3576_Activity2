@@ -162,13 +162,13 @@ class Act2_1{
 			double RPM=rotation_counter.getRPMandUpdate();
     			if(RPM>0)
     			{
-    				Serial.print("revs per min = ");
-    				Serial.println(RPM);
+    				//Serial.print("revs per min = ");
+    				//Serial.println(RPM);
     			}
     					
     			else
     			{
-    				Serial.println("Reading speed failed");
+    				//Serial.println("Reading speed failed");
     			}
 		}
 		

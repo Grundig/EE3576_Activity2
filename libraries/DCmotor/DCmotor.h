@@ -300,6 +300,7 @@ public:
 		if(started)
 		{
 			setSpeedPWM(0);
+			
 			started=false;
 		}
 	}
