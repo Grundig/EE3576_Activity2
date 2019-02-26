@@ -24,9 +24,13 @@ class Act2_2{
 		
 				
 		// Values
-		double motor_low_speed = 1800;  // 30% rated speed (6000 rpm)
-		double motor_mid_speed = 3000;  // 50% rated speed
-		double motor_high_speed = 4800;  // 80% rated speed
+		double motor_low_speed = 77;  // 30% rated speed (6000 rpm)
+		double motor_mid_speed = 128;  // 50% rated speed
+		double motor_high_speed = 204;  // 80% rated speed
+		
+		double motor_low_speed_rpm = 1800;  // 30% rated speed (6000 rpm)
+		double motor_mid_speed_rpm = 3000;  // 50% rated speed
+		double motor_high_speed_rpm = 4800;  // 80% rated speed
 		
 		int adjust_speed_time=250;
   		int target_speed_time=1000;
@@ -91,18 +95,22 @@ class Act2_2{
 		}
 		
 		// Determine motor speed command (low, mid, high) from pushbuttons
-		void motor_speed_input(command_list_enum in_smpl_cmd)
+		double motor_speed_input(command_list_enum in_smpl_cmd)
 		{
+			double target_speed;
+			
 			switch (in_smpl_cmd)
 			{
 				case start:
         		Serial.println(" Start button pressed");
         		HBmotor.start();
+        		target_speed = motor_low_speed_rpm;
         		break;
         		
         		case stop:
         		Serial.println("    Stop button pressed");  
         		HBmotor.stop();
+        		target_speed = 0;
         		break;
         		
         		case reverse:
@@ -112,23 +120,28 @@ class Act2_2{
         
         		case low:
         		Serial.println(" Low button pressed");
-        		task1.motor_speed(motor_low_speed);
+        		HBmotor.setSpeedPWM(motor_low_speed);
+        		target_speed = motor_low_speed_rpm;
         		break;
         		
         		case mid:
         		Serial.println("    Mid button pressed");  
-        		task1.motor_speed(motor_mid_speed);
+        		HBmotor.setSpeedPWM(motor_mid_speed);
+        		target_speed = motor_mid_speed_rpm;
         		break;
         		
         		case high:
         		Serial.println("        High button pressed");
-        		task1.motor_speed(motor_high_speed);
+        		HBmotor.setSpeedPWM(motor_high_speed);
+        		target_speed = motor_high_speed_rpm;
         		break;
         		
         		default:
           		Serial.println("Unknown button pressed");
           		break;
 			}
+			
+			return target_speed;
 		}
 		
 		double read_motor_speed()
@@ -150,14 +163,15 @@ class Act2_2{
 		
 		void system_execute()
 		{
+			command_list_enum in_smpl_cmd;				
+			bool success_command_direction, success_speed, success_command_speed;
+			double curr_speed;
+			double pid_out;
+			double target_speed;
+			
 			// Check buttons
 			if (button_time_check.isMinChekTimeElapsedAndUpdate())
 			{
-				command_list_enum in_smpl_cmd;				
-				bool success_command_direction, success_speed, success_command_speed;
-				double curr_speed;
-				double pid_out;
-				double target_speed = motor_low_speed;  // CAN BE ADJUSTED
 				
 				// Get motor command and output
           		success_command_direction = pushbuttons.check_n_get_command(in_smpl_cmd);
@@ -167,31 +181,35 @@ class Act2_2{
 				if (success_command_direction)
 				{
 					motor_speed_input(in_smpl_cmd);
+					
 				}
 				
 				if (success_command_speed)
 				{
-					motor_speed_input(in_smpl_cmd);
+					target_speed = motor_speed_input(in_smpl_cmd);
 				}
 				
-				// Get current speed, use adjust speed interval
-				if(adjust_speed_interval.isMinChekTimeElapsedAndUpdate())
-				{
-					curr_speed = read_motor_speed();
-				}
-				
-				// PID controller to adjust speed to set point, use target speed check
-				if(target_speed_check.isMinChekTimeElapsedAndUpdate())
-				{
-					pid_out = pid.ComputePID_output(target_speed, curr_speed);
-					task1.motor_speed(pid_out);
-				}
-				
-				// Send value to screen using serial print plotter
-				plotter.appendval(pid_out, curr_speed, target_speed);
-				plotter.print_the_string();
-
 			}
+				
+			// Get current speed, use adjust speed interval
+			if(adjust_speed_interval.isMinChekTimeElapsedAndUpdate())
+			{
+				curr_speed = read_motor_speed();
+			}
+				
+			// PID controller to adjust speed to set point, use target speed check
+			if(target_speed_check.isMinChekTimeElapsedAndUpdate())
+			{
+				pid_out = pid.ComputePID_output(target_speed, curr_speed);
+			}
+			
+			HBmotor.setSpeedPWM(pid_out);
+			
+			// Send value to screen using serial print plotter
+//			plotter.appendval(pid_out, curr_speed, target_speed);
+//			plotter.print_the_string();
+
+			
 			
 		}		
 };
