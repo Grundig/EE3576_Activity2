@@ -19,7 +19,7 @@ void setup()
   reverse_speed_check.setInterCheck(speed_reverse_ms);
   
   // to print to screen
- // Serial.begin(9600);
+ Serial.begin(9600);
   
   
   int stablespeed=55;
@@ -32,15 +32,15 @@ void setup()
 
 void loop()
 {
-  // reverse the speed every ;
+  //reverse the speed every ;
   
   if(reverse_speed_check.isMinChekTimeElapsedAndUpdate())
   {
-    //Serial.println("Reversing Speed");
+    Serial.println("Reversing Speed");
     motor.changedir();
-    //Serial.println("Reversed!");
-    //Serial.println( motor.getSpeedPWM() );
-    //Serial.println("");
+    Serial.println("Reversed!");
+    Serial.println( motor.getSpeedPWM() );
+    Serial.println("");
     
   }
 }

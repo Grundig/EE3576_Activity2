@@ -24,7 +24,7 @@ class Act2_2{
 		inputs pushbuttons;
 		HBridgeDCmotor HBmotor;
 		InterruptSpeedMeasure rotate_count;
-		IntervalCheckTimer button_time_check, adjust_speed_interval, target_speed_check;
+		IntervalCheckTimer button_time_check, target_speed_check;
 		
 		
 				
@@ -37,7 +37,7 @@ class Act2_2{
 		double motor_mid_speed_rpm = 3000;  // 50% rated speed
 		double motor_high_speed_rpm = 4800;  // 80% rated speed
 		
-		int adjust_speed_time=250;
+		//int adjust_speed_time=250;
   		int target_speed_time=1000;
  		int buttons_check_time=200;
 		
@@ -92,14 +92,14 @@ class Act2_2{
 		}
 		
 		// Set times between checks for components and system
-		void set_time_intervals(int buttons_check_time, int adjust_speed_time, int target_speed_time)
+		void set_time_intervals(int buttons_check_time, int target_speed_time)
 		{
 			button_time_check.setInterCheck(buttons_check_time);
-			adjust_speed_interval.setInterCheck(adjust_speed_time);
+			//adjust_speed_interval.setInterCheck(adjust_speed_time);
 			target_speed_check.setInterCheck(target_speed_time);
 		}
 		
-			    void motor_direction_input(command_list_enum direction)
+		void motor_direction_input(command_list_enum direction)
 		{	
 			switch (direction)
 			{
@@ -215,15 +215,12 @@ class Act2_2{
 				
 			}
 				
-			// Get current speed, use adjust speed interval
-			if(adjust_speed_interval.isMinChekTimeElapsedAndUpdate())
-			{
-				curr_speed = read_motor_speed();
-			}
+			
 				
 			// PID controller to adjust speed to set point, use target speed check
 			if(target_speed_check.isMinChekTimeElapsedAndUpdate())
 			{
+				curr_speed = read_motor_speed();
 				pid_out = pid.ComputePID_output(target_speed, curr_speed);
 			}
 			
