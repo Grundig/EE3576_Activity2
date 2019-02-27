@@ -8,11 +8,16 @@
 #include<basic_speed_PID.h>
 #include<DCmotor.h>
 
+command_list_enum direction;
+command_list_enum speed;
+
 
 class Act2_2{
 	
 	protected:
-		// Objects
+		// 
+//		direction direction_cmd;
+//		speed speed_cmd;
 		Act2_1 task1;
 		SerialPrinterPlotter plotter;
 		basic_speed_PID pid;
@@ -94,10 +99,9 @@ class Act2_2{
 			target_speed_check.setInterCheck(target_speed_time);
 		}
 		
-		// Determine motor speed command (low, mid, high) from pushbuttons
-		void motor_speed_input(command_list_enum in_smpl_cmd)
+			    void motor_direction_input(command_list_enum direction)
 		{	
-			switch (in_smpl_cmd)
+			switch (direction)
 			{
 				case start:
         		Serial.println(" Start button pressed");
@@ -113,6 +117,33 @@ class Act2_2{
         		Serial.println("        Reverse button pressed");
         		HBmotor.changedir();
         		break;
+        		
+        		default:
+          		Serial.println("Unknown button pressed direction");
+          		break;
+        		
+        	}
+        }
+        
+		// Determine motor speed command (low, mid, high) from pushbuttons
+		void motor_speed_input(command_list_enum speed)
+		{	
+			switch (speed)
+			{
+//				case start:
+//        		Serial.println(" Start button pressed");
+//        		HBmotor.start();
+//        		break;
+//        		
+//        		case stop:
+//        		Serial.println("    Stop button pressed");  
+//        		HBmotor.stop();
+//        		break;
+//        		
+//        		case reverse:
+//        		Serial.println("        Reverse button pressed");
+//        		HBmotor.changedir();
+//        		break;
         
         		case low:
         		Serial.println(" Low button pressed");
@@ -130,7 +161,7 @@ class Act2_2{
         		break;
         		
         		default:
-          		Serial.println("Unknown button pressed");
+          		Serial.println("Unknown button pressed speed");
           		break;
 			}
 			
@@ -154,31 +185,32 @@ class Act2_2{
 		}
 		
 		void system_execute()
-		{
-			command_list_enum in_smpl_cmd;				
+		{		
 			bool success_command_direction, success_speed, success_command_speed;
 			double curr_speed;
 			double pid_out;
 			double target_speed;
 			
+			
 			// Check buttons
 			if (button_time_check.isMinChekTimeElapsedAndUpdate())
 			{
 				
+				success_command_speed = pushbuttons.check_n_get_command(speed);
 				// Get motor command and output
-          		success_command_direction = pushbuttons.check_n_get_command(in_smpl_cmd);
+          		success_command_direction = pushbuttons.check_n_get_command(direction);
 				// Get motor speed command and output
-				success_command_speed = pushbuttons.check_n_get_command(in_smpl_cmd);
+
+				Serial.print(direction);
 				
 				if (success_command_direction)
 				{
-					motor_speed_input(in_smpl_cmd);
-					
+					motor_speed_input(direction);
 				}
 				
 				if (success_command_speed)
 				{
-					motor_speed_input(in_smpl_cmd);
+					motor_speed_input(speed);
 				}
 				
 			}

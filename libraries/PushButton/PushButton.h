@@ -39,7 +39,6 @@ enum command_list_enum
 };
 
 
-
 class simple_command{
 private:
 	command_list_enum command;
