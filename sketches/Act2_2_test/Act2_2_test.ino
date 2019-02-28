@@ -15,7 +15,7 @@ void setup() {
   int high_speed_pin = 13;
   
   //int adjust_speed_time=200;
-  int target_speed_time=100;
+  int target_speed_time=10;
   int buttons_check_time=200;
   
   our_sys.setup_motor_pushbuttons(start_pin, stop_pin, reverse_pin);

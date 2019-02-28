@@ -38,7 +38,7 @@ class Act2_2{
 		double motor_mid_speed_rpm = 3000;  // 50% rated speed
 		double motor_high_speed_rpm = 4800;  // 80% rated speed
 		
-		//int adjust_speed_time=250;
+		
   		int target_speed_time;
  		int buttons_check_time;
 		
@@ -96,35 +96,10 @@ class Act2_2{
 		void set_time_intervals(int buttons_check_time, int target_speed_time)
 		{
 			button_time_check.setInterCheck(buttons_check_time);
-			//adjust_speed_interval.setInterCheck(adjust_speed_time);
 			target_speed_check.setInterCheck(target_speed_time);
 		}
 		
-//		void motor_direction_input(command_list_enum direction)
-//		{	
-//			switch (direction)
-//			{
-//				case start:
-//        		Serial.println(" Start button pressed");
-//        		HBmotor.start();
-//        		break;
-//        		
-//        		case stop:
-//        		Serial.println("    Stop button pressed");  
-//        		HBmotor.stop();
-//        		break;
-//        		
-//        		case reverse:
-//        		Serial.println("        Reverse button pressed");
-//        		HBmotor.changedir();
-//        		break;
-//        		
-//        		default:
-//          		Serial.println("Unknown button pressed direction");
-//          		break;
-//        		
-//        	}
-//        }
+
         
 		// Determine motor speed command (low, mid, high) from pushbuttons
 		void motor_speed_input(command_list_enum speed)
@@ -165,7 +140,7 @@ class Act2_2{
         		break;
         		
         		default:
-          		Serial.println("Unknown button pressed speed");
+//          		Serial.println("Unknown button pressed speed");
           		break;
 			}
 			
@@ -174,17 +149,17 @@ class Act2_2{
 		double read_motor_speed()
 		{
 			double RPM=rotate_count.getRPMandUpdate();
-    			if(RPM>0)
-    			{
-    				Serial.print("revs per min = ");
-    				Serial.println(RPM);
-    			}
+  //  			if(RPM>0)
+//    			{
+//    				Serial.print("revs per min = ");
+//    				Serial.println(RPM);
+//    			}
     					
-    			else
-    			{
-    				Serial.println("Reading speed failed");
-    			}
-    			
+//    			else
+//    			{
+//    				Serial.println("Reading speed failed");
+//    			}
+//    			
     		return RPM;
 		}
 		
@@ -227,13 +202,14 @@ class Act2_2{
 				curr_speed = read_motor_speed();
 				pid_out = pid.ComputePID_output(target_speed, curr_speed);
 			}
-			
+			Serial.println(curr_speed);
 			HBmotor.setSpeedPWM(pid_out);
 			
-			// Send value to screen using serial print plotter
-//			plotter.appendval(pid_out, curr_speed, target_speed);
+			//Send value to screen using serial print plotter
+//			plotter.set_bounds(0,0,50);
+//		    plotter.appendval(0, curr_speed, target_speed, 10);
 //			plotter.print_the_string();
-
+			
 			
 			
 		}		

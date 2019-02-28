@@ -288,14 +288,14 @@ public:
 	
 	void start()
 	{	
-		Serial.println("@@@ Start function:");
+//		Serial.println("@@@ Start function:");
 		if(!started)
 		{
 			started=true;
-			Serial.println("		started = true");
+//			Serial.println("		started = true");
 			if(jumpstartfromstill)
 				motor.startUpSequence();
-				Serial.println("		Start sequence");
+//				Serial.println("		Start sequence");
 		}
 	}
 
