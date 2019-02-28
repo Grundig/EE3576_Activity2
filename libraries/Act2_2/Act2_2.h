@@ -10,7 +10,8 @@
 
 //command_list_enum direction;
 command_list_enum speed;
-double target_speed = 200;
+double target_speed = 2000;
+double pid_out;
 
 
 class Act2_2{
@@ -25,7 +26,7 @@ class Act2_2{
 		inputs pushbuttons;
 		HBridgeDCmotor HBmotor;
 		InterruptSpeedMeasure rotate_count;
-		IntervalCheckTimer button_time_check, target_speed_check;
+		IntervalCheckTimer button_time_check, target_speed_check, plot_time_check;
 		
 		
 				
@@ -41,6 +42,7 @@ class Act2_2{
 		
   		int target_speed_time;
  		int buttons_check_time;
+ 		
 		
 	public:
 		
@@ -97,6 +99,7 @@ class Act2_2{
 		{
 			button_time_check.setInterCheck(buttons_check_time);
 			target_speed_check.setInterCheck(target_speed_time);
+			plot_time_check.setInterCheck(200);
 		}
 		
 
@@ -167,7 +170,7 @@ class Act2_2{
 		{		
 			bool success_command_direction, success_speed, success_command_speed;
 			double curr_speed;
-			double pid_out;
+			
 			
 			
 			
@@ -200,10 +203,25 @@ class Act2_2{
 			if(target_speed_check.isMinChekTimeElapsedAndUpdate())
 			{
 				curr_speed = read_motor_speed();
-				pid_out = pid.ComputePID_output(target_speed, curr_speed);
+				if(HBmotor.isStarted())
+				{
+					pid_out = pid.ComputePID_output(target_speed, curr_speed);
+			
+			
+					if(plot_time_check.isMinChekTimeElapsed())
+					{
+						//Serial.println(curr_speed);
+						Serial.println(pid_out);
+			
+					}
+					HBmotor.setSpeedPWM(pid_out);
+				}
+				else
+					pid.reset_pidcontrol();
+				
+			
 			}
-			Serial.println(curr_speed);
-			HBmotor.setSpeedPWM(pid_out);
+			
 			
 			//Send value to screen using serial print plotter
 //			plotter.set_bounds(0,0,50);

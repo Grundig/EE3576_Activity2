@@ -51,11 +51,11 @@ protected:
 	{
 		// set some default vals
 		ref_kp=0.7;
-		ref_ki=10;
+		ref_ki=0.45;
 		ref_kd=0.5;
 		ref_contr_inter_time_ms=REF_CONTR_INTER_MS;
 		PIDoutMin=0.0;
-		PIDoutMax=150.0;
+		PIDoutMax=255.0;
 
 		// initialize params
 		last_control_ms=millis();
@@ -127,13 +127,14 @@ public:
 		
 		//Compute PID Output
 		output = kp*error + ki*cumulative_error + kd*error_derivative;
-		
+		//Serial.println(output);
 		// keep within bounds
-		if(output > PIDoutMax)
-			output = PIDoutMax;
-		else
-			if(output < PIDoutMin)
-				output = PIDoutMin;
+		output = map(output,-10000,10000,0,255);
+//		if(output > PIDoutMax)
+//			output = PIDoutMax;
+//		else
+//			if(output < PIDoutMin)
+//				output = PIDoutMin;
 
 		//
 		//print to screen 
