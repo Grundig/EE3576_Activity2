@@ -8,8 +8,9 @@
 #include<basic_speed_PID.h>
 #include<DCmotor.h>
 
-command_list_enum direction;
+//command_list_enum direction;
 command_list_enum speed;
+double target_speed = 200;
 
 
 class Act2_2{
@@ -38,8 +39,8 @@ class Act2_2{
 		double motor_high_speed_rpm = 4800;  // 80% rated speed
 		
 		//int adjust_speed_time=250;
-  		int target_speed_time=1000;
- 		int buttons_check_time=200;
+  		int target_speed_time;
+ 		int buttons_check_time;
 		
 	public:
 		
@@ -99,9 +100,36 @@ class Act2_2{
 			target_speed_check.setInterCheck(target_speed_time);
 		}
 		
-		void motor_direction_input(command_list_enum direction)
+//		void motor_direction_input(command_list_enum direction)
+//		{	
+//			switch (direction)
+//			{
+//				case start:
+//        		Serial.println(" Start button pressed");
+//        		HBmotor.start();
+//        		break;
+//        		
+//        		case stop:
+//        		Serial.println("    Stop button pressed");  
+//        		HBmotor.stop();
+//        		break;
+//        		
+//        		case reverse:
+//        		Serial.println("        Reverse button pressed");
+//        		HBmotor.changedir();
+//        		break;
+//        		
+//        		default:
+//          		Serial.println("Unknown button pressed direction");
+//          		break;
+//        		
+//        	}
+//        }
+        
+		// Determine motor speed command (low, mid, high) from pushbuttons
+		void motor_speed_input(command_list_enum speed)
 		{	
-			switch (direction)
+			switch (speed)
 			{
 				case start:
         		Serial.println(" Start button pressed");
@@ -117,47 +145,23 @@ class Act2_2{
         		Serial.println("        Reverse button pressed");
         		HBmotor.changedir();
         		break;
-        		
-        		default:
-          		Serial.println("Unknown button pressed direction");
-          		break;
-        		
-        	}
-        }
-        
-		// Determine motor speed command (low, mid, high) from pushbuttons
-		void motor_speed_input(command_list_enum speed)
-		{	
-			switch (speed)
-			{
-//				case start:
-//        		Serial.println(" Start button pressed");
-//        		HBmotor.start();
-//        		break;
-//        		
-//        		case stop:
-//        		Serial.println("    Stop button pressed");  
-//        		HBmotor.stop();
-//        		break;
-//        		
-//        		case reverse:
-//        		Serial.println("        Reverse button pressed");
-//        		HBmotor.changedir();
-//        		break;
         
         		case low:
         		Serial.println(" Low button pressed");
         		HBmotor.setSpeedPWM(motor_low_speed);
+        		target_speed = motor_low_speed_rpm;
         		break;
         		
         		case mid:
         		Serial.println("    Mid button pressed");  
         		HBmotor.setSpeedPWM(motor_mid_speed);
-        		break;
+        		target_speed = motor_mid_speed_rpm;
+				break;
         		
         		case high:
         		Serial.println("        High button pressed");
         		HBmotor.setSpeedPWM(motor_high_speed);
+        		target_speed = motor_high_speed_rpm;
         		break;
         		
         		default:
@@ -189,7 +193,7 @@ class Act2_2{
 			bool success_command_direction, success_speed, success_command_speed;
 			double curr_speed;
 			double pid_out;
-			double target_speed;
+			
 			
 			
 			// Check buttons
@@ -198,16 +202,16 @@ class Act2_2{
 				
 				success_command_speed = pushbuttons.check_n_get_command(speed);
 				// Get motor command and output
-          		success_command_direction = pushbuttons.check_n_get_command(direction);
+          		//success_command_direction = pushbuttons.check_n_get_command(direction);
 				// Get motor speed command and output
 
-				Serial.print(direction);
+				//Serial.print(direction);
 				
-				if (success_command_direction)
-				{
-					motor_speed_input(direction);
-				}
-				
+//				if (success_command_direction)
+//				{
+//					motor_speed_input(direction);
+//				}
+//				
 				if (success_command_speed)
 				{
 					motor_speed_input(speed);

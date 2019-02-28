@@ -102,6 +102,7 @@ public:
 		// bootstrap sequence needed if (sufficiently) below the min sustainable speed
 		if(motor_drive.isEnabled() && (motor_drive.get_brightness()<(min_sustainable_pwm-4)) )
 		{
+			Serial.println("@@@@ Start in basic @@@@");
 			 //motor_drive.set_brightness(startup_pwm);
 			 motor_drive.set_max_bright();
 			 delay(startup_pwm_ms);
@@ -286,12 +287,15 @@ public:
 	}
 	
 	void start()
-	{
+	{	
+		Serial.println("@@@ Start function:");
 		if(!started)
 		{
 			started=true;
+			Serial.println("		started = true");
 			if(jumpstartfromstill)
 				motor.startUpSequence();
+				Serial.println("		Start sequence");
 		}
 	}
 
