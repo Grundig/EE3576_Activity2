@@ -208,12 +208,7 @@ class Act2_2{
 					pid_out = pid.ComputePID_output(target_speed, curr_speed);
 			
 			
-					if(plot_time_check.isMinChekTimeElapsed())
-					{
-						//Serial.println(curr_speed);
-						Serial.println(pid_out);
-			
-					}
+					
 					HBmotor.setSpeedPWM(pid_out);
 				}
 				else
@@ -221,6 +216,18 @@ class Act2_2{
 				
 			
 			}
+			if(plot_time_check.isMinChekTimeElapsedAndUpdate())
+					{
+						Serial.print(0);  // To freeze the lower limit
+						Serial.print(" ");
+						Serial.print(6000);  // To freeze the upper limit
+						Serial.print(" ");
+						Serial.print(target_speed);
+						Serial.print(" ");
+						Serial.println(curr_speed);
+//						Serial.println(pid_out);
+			
+					}
 			
 			
 			//Send value to screen using serial print plotter
