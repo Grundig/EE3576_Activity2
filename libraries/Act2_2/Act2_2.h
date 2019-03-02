@@ -8,7 +8,6 @@
 #include<basic_speed_PID.h>
 #include<DCmotor.h>
 
-//command_list_enum direction;
 command_list_enum command;
 double target_speed = 2000;
 double pid_out;
