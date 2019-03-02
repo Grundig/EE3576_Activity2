@@ -199,7 +199,9 @@ class Act2_3{
 					Serial.print(" ");
 					Serial.println(curr_speed);      // X axis is number of samples, i.e, sampled every 0.2 ms, so 100 samples taken in 20 s
 				}
-		}		
+		}
+		
+		// PART 3 TASK EXECUTION (call functions here)		
 };
 
 
