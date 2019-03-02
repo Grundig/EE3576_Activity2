@@ -9,7 +9,7 @@
 #include<DCmotor.h>
 
 //command_list_enum direction;
-command_list_enum speed;
+command_list_enum command;
 double target_speed = 2000;
 double pid_out;
 
@@ -17,9 +17,8 @@ double pid_out;
 class Act2_2{
 	
 	protected:
-		// 
-//		direction direction_cmd;
-//		speed speed_cmd;
+
+		// Objects
 		Act2_1 task1;
 		SerialPrinterPlotter plotter;
 		basic_speed_PID pid;
@@ -27,9 +26,7 @@ class Act2_2{
 		HBridgeDCmotor HBmotor;
 		InterruptSpeedMeasure rotate_count;
 		IntervalCheckTimer button_time_check, target_speed_check, plot_time_check;
-		
-		
-				
+			
 		// Values
 		double motor_low_speed = 77;  // 30% rated speed (6000 rpm)
 		double motor_mid_speed = 128;  // 50% rated speed
@@ -39,7 +36,7 @@ class Act2_2{
 		double motor_mid_speed_rpm = 3000;  // 50% rated speed
 		double motor_high_speed_rpm = 4800;  // 80% rated speed
 		
-		
+		// Global variabled
   		int target_speed_time;
  		int buttons_check_time;
  		
@@ -75,7 +72,7 @@ class Act2_2{
   			in_push_button mid_but(mid_speed_pin, mid, mininterval_ms);
   			in_push_button high_but(high_speed_pin, high, mininterval_ms);
   			
-  				// Add push button into system
+  			// Add push button into system
   			pushbuttons.add_in_push_button(low_but);
  			pushbuttons.add_in_push_button(mid_but);
   			pushbuttons.add_in_push_button(high_but);
@@ -101,13 +98,11 @@ class Act2_2{
 			target_speed_check.setInterCheck(target_speed_time);
 			plot_time_check.setInterCheck(200);
 		}
-		
-
-        
+		        
 		// Determine motor speed command (low, mid, high) from pushbuttons
-		void motor_speed_input(command_list_enum speed)
+		void motor_speed_input(command_list_enum command)
 		{	
-			switch (speed)
+			switch (command)
 			{
 				case start:
         		Serial.println(" Start button pressed");
@@ -143,61 +138,38 @@ class Act2_2{
         		break;
         		
         		default:
-//          		Serial.println("Unknown button pressed speed");
           		break;
 			}
 			
 		}
 		
+		// Get motor speed from Hall effect sensor (RPM)
 		double read_motor_speed()
 		{
 			double RPM=rotate_count.getRPMandUpdate();
-  //  			if(RPM>0)
-//    			{
-//    				Serial.print("revs per min = ");
-//    				Serial.println(RPM);
-//    			}
-    					
-//    			else
-//    			{
-//    				Serial.println("Reading speed failed");
-//    			}
-//    			
     		return RPM;
 		}
 		
+		// Execute the system task
 		void system_execute()
 		{		
-			bool success_command_direction, success_speed, success_command_speed;
+			bool success_command;
 			double curr_speed;
-			
-			
-			
 			
 			// Check buttons
 			if (button_time_check.isMinChekTimeElapsedAndUpdate())
 			{
 				
-				success_command_speed = pushbuttons.check_n_get_command(speed);
-				// Get motor command and output
-          		//success_command_direction = pushbuttons.check_n_get_command(direction);
-				// Get motor speed command and output
-
-				//Serial.print(direction);
-				
-//				if (success_command_direction)
-//				{
-//					motor_speed_input(direction);
-//				}
-//				
-				if (success_command_speed)
+				// Get push button command
+				success_command = pushbuttons.check_n_get_command(command);
+			
+				if (success_command)
 				{
-					motor_speed_input(speed);
+					motor_speed_input(command);
 				}
 				
 			}
 				
-			
 				
 			// PID controller to adjust speed to set point, use target speed check
 			if(target_speed_check.isMinChekTimeElapsedAndUpdate())
@@ -216,27 +188,18 @@ class Act2_2{
 				
 			
 			}
+			
+			// Plot in serial plotter
 			if(plot_time_check.isMinChekTimeElapsedAndUpdate())
-					{
-						Serial.print(0);  // To freeze the lower limit
-						Serial.print(" ");
-						Serial.print(6000);  // To freeze the upper limit
-						Serial.print(" ");
-						Serial.print(target_speed);
-						Serial.print(" ");
-						Serial.println(curr_speed);
-//						Serial.println(pid_out);
-			
-					}
-			
-			
-			//Send value to screen using serial print plotter
-//			plotter.set_bounds(0,0,50);
-//		    plotter.appendval(0, curr_speed, target_speed, 10);
-//			plotter.print_the_string();
-			
-			
-			
+				{
+					Serial.print(0);  // To freeze the lower limit
+					Serial.print(" ");
+					Serial.print(6000);  // To freeze the upper limit
+					Serial.print(" ");
+					Serial.print(target_speed);
+					Serial.print(" ");
+					Serial.println(curr_speed);      // X axis is number of samples, i.e, sampled every 0.2 ms, so 100 samples taken in 20 s
+				}
 		}		
 };
 
