@@ -1,5 +1,5 @@
-#ifndef Act2_3_h
-#define Act2_3_h
+#ifndef Act2_3_2_h
+#define Act2_3_2_h
 
 #include <Act2_1.h>
 
@@ -13,7 +13,11 @@ double target_speed = 2000;
 double pid_out;
 
 
-class Act2_3{
+int pv_counter;
+double peak_value;
+double peak_time;
+
+class Act2_3_2{
 	
 	protected:
 
@@ -182,10 +186,12 @@ class Act2_3{
 					
 					HBmotor.setSpeedPWM(pid_out);
 				}
+				
 				else
 					pid.reset_pidcontrol();
-				
-			
+					
+				// Get peak value and peak time
+				get_peak_value(curr_speed);
 			}
 			
 			// Plot in serial plotter
@@ -199,9 +205,84 @@ class Act2_3{
 					Serial.print(" ");
 					Serial.println(curr_speed);      // X axis is number of samples, i.e, sampled every 0.2 ms, so 100 samples taken in 20 s
 				}
+
+		
+
 		}
 		
 		// PART 3 TASK EXECUTION (call functions here)		
+		
+		// Kim part, calculate peak value and peak time, global variables pv_counter
+		void get_peak_value(int curr_speed)
+		{
+			int max_count = 25;
+			
+			// Only run function once, once the motor has been started
+			if ((pv_counter <= max_count) && (HBmotor.isStarted()))
+			{
+				if (curr_speed > peak_value)
+				{
+					peak_value = curr_speed;
+					peak_time = pv_counter;  
+					pv_counter++;
+				}
+			
+				else 
+				{
+					pv_counter++;
+				}
+			
+				// Stable speed time of 5 s (max_count = 25), assuming target speed check time = 0.2 s
+				if (pv_counter == max_count)
+				{
+					peak_time = peak_time * 0.2;
+					
+					Serial.print("Peak value = ");
+					Serial.println(peak_value);
+					Serial.print("Peak time = ");
+					Serial.println(peak_time);
+				}
+				
+			}
+		}
+		
+//		void get_peak_value_new(int curr_speed)
+//		{
+//			
+//			// Only run function once, once the motor has been started
+//			if ((!done) && (HBmotor.isStarted()))
+//			{
+//				unsigned long time_check = 5;
+//				unsigned long fin_time;
+//				unsigned long start_time;
+//				unsigned long current_time = millis();
+//				
+//				if (x==0)
+//				{
+//					start_time = millis();
+//					x = 1;
+//				}
+//				
+//				if (curr_speed > peak_value)
+//				{
+//					peak_value = curr_speed;
+//					fin_time = millis();
+//				}
+//				
+//				if ((current_time - start_time) > time_check)
+//				{
+//					peak_time = fin_time - start_time;
+//					
+//					Serial.print("Peak value = ");
+//					Serial.println(peak_value);
+//					Serial.print("Peak time = ");
+//					Serial.println(peak_time);
+//					
+//					done = true;
+//				}
+//				
+//			}
+//		}
 };
 
 
