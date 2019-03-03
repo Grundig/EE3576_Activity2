@@ -50,9 +50,9 @@ protected:
 	void set_defaultvals()
 	{
 		// set some default vals
-		ref_kp=0.7;
-		ref_ki=0.45;
-		ref_kd=0.5;
+		ref_kp= 5; // 0.7  mid val: 5
+		ref_ki= 0.15;  //0.45 mid val: 0.15
+		ref_kd= 1.5;  // 0.5  mid val: 3
 		ref_contr_inter_time_ms=REF_CONTR_INTER_MS;
 		PIDoutMin=0.0;
 		PIDoutMax=255.0;
