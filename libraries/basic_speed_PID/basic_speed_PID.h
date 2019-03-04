@@ -50,15 +50,11 @@ protected:
 	void set_defaultvals()
 	{
 		// set some default vals
-<<<<<<< Updated upstream
-		ref_kp= 5; // 0.7  mid val: 5
-		ref_ki= 0.15;  //0.45 mid val: 0.15
-		ref_kd= 1.5;  // 0.5  mid val: 3
-=======
-		ref_kp=0.7; // 0.7
-		ref_ki=0.45;
-		ref_kd=10;
->>>>>>> Stashed changes
+
+		ref_kp= 0.1; // 0.7  mid val: 5
+		ref_ki= 0.01;  //0.45 mid val: 0.15
+		ref_kd= 0;  // 0.5  mid val: 3
+
 		ref_contr_inter_time_ms=REF_CONTR_INTER_MS;
 		PIDoutMin=0.0;
 		PIDoutMax=255.0;
@@ -135,12 +131,12 @@ public:
 		output = kp*error + ki*cumulative_error + kd*error_derivative;
 		//Serial.println(output);
 		// keep within bounds
-		output = map(output,-10000,10000,0,255);
-//		if(output > PIDoutMax)
-//			output = PIDoutMax;
-//		else
-//			if(output < PIDoutMin)
-//				output = PIDoutMin;
+//		output = map(output,-10000,10000,0,255);
+		if(output > PIDoutMax)
+			output = PIDoutMax;
+		else
+			if(output < PIDoutMin)
+				output = PIDoutMin;
 
 		//
 		//print to screen 
