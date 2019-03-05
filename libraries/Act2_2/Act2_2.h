@@ -8,9 +8,18 @@
 #include<basic_speed_PID.h>
 #include<DCmotor.h>
 
+<<<<<<< Updated upstream
 command_list_enum command;
+=======
+//command_list_enum direction;
+command_list_enum speed;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 double target_speed = 2000;
 double pid_out;
+=======
+int target_speed;
+>>>>>>> Stashed changes
 
 
 class Act2_2{
@@ -121,19 +130,19 @@ class Act2_2{
         		case low:
         		Serial.println(" Low button pressed");
         		HBmotor.setSpeedPWM(motor_low_speed);
-        		target_speed = motor_low_speed_rpm;
+        		target_speed = motor_low_speed;
         		break;
         		
         		case mid:
         		Serial.println("    Mid button pressed");  
         		HBmotor.setSpeedPWM(motor_mid_speed);
-        		target_speed = motor_mid_speed_rpm;
+        		target_speed = motor_mid_speed;
 				break;
         		
         		case high:
         		Serial.println("        High button pressed");
         		HBmotor.setSpeedPWM(motor_high_speed);
-        		target_speed = motor_high_speed_rpm;
+        		target_speed = motor_high_speed;
         		break;
         		
         		default:
@@ -154,7 +163,17 @@ class Act2_2{
 		{		
 			bool success_command;
 			double curr_speed;
+<<<<<<< Updated upstream
 			
+<<<<<<< Updated upstream
+=======
+=======
+			int pid_out;
+>>>>>>> Stashed changes
+			
+			
+			
+>>>>>>> Stashed changes
 			// Check buttons
 			if (button_time_check.isMinChekTimeElapsedAndUpdate())
 			{
@@ -174,6 +193,7 @@ class Act2_2{
 			if(target_speed_check.isMinChekTimeElapsedAndUpdate())
 			{
 				curr_speed = read_motor_speed();
+<<<<<<< Updated upstream
 				if(HBmotor.isStarted())
 				{
 					pid_out = pid.ComputePID_output(target_speed, curr_speed);
@@ -186,6 +206,11 @@ class Act2_2{
 					pid.reset_pidcontrol();
 				
 			
+=======
+				curr_speed = map(curr_speed, 0, 6000, 0, 255);
+				pid_out = pid.ComputePID_output(target_speed, curr_speed);
+				
+>>>>>>> Stashed changes
 			}
 			
 			// Plot in serial plotter
