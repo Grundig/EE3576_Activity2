@@ -12,6 +12,10 @@ command_list_enum command;
 double target_speed = 2000;
 double pid_out;
 long int start_time;
+bool within_error = false; // state flag for the stablilisation
+bool stabilised = false; // prevents further messages output
+
+FILE * replay_file;
 
 class Act2_3_4{
 	
@@ -106,7 +110,9 @@ class Act2_3_4{
 				case start:
 				start_time = millis();
         		Serial.println(" Start button pressed");
-        		HBmotor.start();
+        		stabilised = false;
+				HBmotor.start();
+        		
         		
         		break;
         		
@@ -201,30 +207,39 @@ class Act2_3_4{
 					Serial.print(target_speed);
 					Serial.print(" ");
 					Serial.println(curr_speed);      // X axis is number of samples, i.e, sampled every 0.2 s, so 100 samples taken in 20 s
-				
+					
 					//settle time detection
-					long int settle_time;
-					bool within_error = false; // state flag
+					long int settle_time;					
 					int error_band = target_speed * 0.1; 
-					if(abs(curr_speed-target_speed) <= error_band ){
-						if(within_error = false){
-							long int settle_time = millis();
-							within_error = true;
-						}
-						
-						if(abs(curr_speed-target_speed) > error_band && within_error == true){
-							within_error = false;
-						}
-						
-						if(within_error == true && settle_time-millis() >= 2000){
-							int total_settle_time = settle_time - start_time;
-							Serial.print("System settled in: ");
-							Serial.print(total_settle_time);
-							Serial.println(" ms");
+					if(!stabilised){
+						if(abs(curr_speed-target_speed) <= error_band ){
+							if(within_error = false){
+								long int settle_time = millis();
+								within_error = true;
+							}
+							
+							if(abs(curr_speed-target_speed) > error_band && within_error == true){
+								within_error = false;
+							}
+							
+							if(within_error == true && settle_time-millis() >= 2000){
+								int total_settle_time = settle_time - start_time;
+								Serial.print("System settled in: ");
+								Serial.print(total_settle_time);
+								Serial.println(" ms");
+								stabilised = true;
+							}
 						}
 					}
-					
+					//save to file
+					replay_file = fopen("c:\\temp\\1.txt","a");
+					fprintf (fp, "%d\n",curr_speed); //save as collumn vector
+					fclose(replay_file);
+				
 				}
+			
+		
+		
 		}		
 };
 

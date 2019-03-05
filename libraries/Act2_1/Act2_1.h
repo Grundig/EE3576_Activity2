@@ -24,7 +24,7 @@ class Act2_1{
 		// Values
 		int map_min_val = 0;
 		int map_max_val = 100;
-		int speed_control_ms = 2000;
+		int speed_control_ms = 2000; 
 		
 		// Enabled
 		bool pushbuttons_enabled = false, potentiometer_enabled = false, time_enabled = false, motor_enabled = false, speed_enabled = false;
