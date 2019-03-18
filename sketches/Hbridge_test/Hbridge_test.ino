@@ -22,7 +22,7 @@ void setup()
  Serial.begin(9600);
   
   
-  int stablespeed=55;
+  int stablespeed=80;
   // this is to kick-start the motor at every change of direction
   motor.set_jumpstart(true);
   motor.start();

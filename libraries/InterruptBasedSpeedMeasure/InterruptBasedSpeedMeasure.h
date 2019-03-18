@@ -19,7 +19,7 @@ protected:
 	int tot_interr_on_circle;
 
 	// by default there are 6 magnets aroud the wheel
-	static const int DEFAULT_INTER_ON_CIRCLE=6;
+	static const int DEFAULT_INTER_ON_CIRCLE=64;
 	//
 	bool enabled;
 

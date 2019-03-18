@@ -15,7 +15,7 @@ void setup()
   
   // enable the interrupt (int_0 works via pin2)
   // enable the interrupt (int_1 works via pin3)
-  rotation_counter.setupSpeedMeasure(int_1);
+  rotation_counter.setupSpeedMeasure(int_0);
   
   // timer to perform speed measurement and control at given interval:
   // set the time between speed measurements/control)

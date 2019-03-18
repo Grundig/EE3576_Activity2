@@ -14,7 +14,6 @@ void setup() {
   int mid_speed_pin = 12;
   int high_speed_pin = 13;
   
-  //int adjust_speed_time=200;
   int target_speed_time=400;
   int buttons_check_time=200;
   

@@ -9,13 +9,16 @@
 #include<DCmotor.h>
 
 command_list_enum command;
-double target_speed = 2000;
+double target_speed;
 double pid_out;
 long int start_time;
 bool within_error = false; // state flag for the stablilisation
 bool stabilised = false; // prevents further messages output
 
-FILE * replay_file;
+//TASK 4 CODE
+//remove("output.txt");					//If another copy of output file exists delete it 
+//FILE * replay_file;
+//
 
 class Act2_3_4{
 	
@@ -111,14 +114,13 @@ class Act2_3_4{
 				start_time = millis();
         		Serial.println(" Start button pressed");
         		stabilised = false;
-				HBmotor.start();
-        		
-        		
+				HBmotor.start();	
         		break;
         		
         		case stop:
         		Serial.println("    Stop button pressed");  
         		HBmotor.stop();
+        		target_speed=0; 
         		break;
         		
         		case reverse:
@@ -128,19 +130,16 @@ class Act2_3_4{
         
         		case low:
         		Serial.println(" Low button pressed");
-        		HBmotor.setSpeedPWM(motor_low_speed);
         		target_speed = motor_low_speed_rpm;
         		break;
         		
         		case mid:
         		Serial.println("    Mid button pressed");  
-        		HBmotor.setSpeedPWM(motor_mid_speed);
         		target_speed = motor_mid_speed_rpm;
 				break;
         		
         		case high:
         		Serial.println("        High button pressed");
-        		HBmotor.setSpeedPWM(motor_high_speed);
         		target_speed = motor_high_speed_rpm;
         		break;
         		
@@ -209,38 +208,42 @@ class Act2_3_4{
 					Serial.println(curr_speed);      // X axis is number of samples, i.e, sampled every 0.2 s, so 100 samples taken in 20 s
 					
 					//settle time detection
-					long int settle_time;					
-					int error_band = target_speed * 0.1; 
-					if(!stabilised){
+					long int settle_time;
+					int stable_time = 2000; //in ms
+					double x_stable = 5; //stable band in %				
+					double error_band = target_speed * (x_stable/100);
+					
+					if(!stabilised && HBmotor.isStarted()){
 						if(abs(curr_speed-target_speed) <= error_band ){
-							if(within_error = false){
-								long int settle_time = millis();
+							if(within_error == false){
+								settle_time = millis();
 								within_error = true;
 							}
 							
-							if(abs(curr_speed-target_speed) > error_band && within_error == true){
+							if((abs(curr_speed-target_speed)) > error_band && within_error == true){
 								within_error = false;
+								Serial.println("ustable");
 							}
 							
-							if(within_error == true && settle_time-millis() >= 2000){
-								int total_settle_time = settle_time - start_time;
+							long int time_since_settle = millis()-settle_time;
+							
+							if((within_error == true) && (time_since_settle >= stable_time)){
+								long int total_settle_time = settle_time-start_time ;
 								Serial.print("System settled in: ");
 								Serial.print(total_settle_time);
 								Serial.println(" ms");
 								stabilised = true;
 							}
 						}
+						//save to file TASK 4 CODE
+//						replay_file = fopen("output.txt","a"); //open the file in append mode
+//						fprintf (replay_file, "%d\n",curr_speed); //save as collumn vector
+//						fclose(replay_file);
 					}
-					//save to file
-					replay_file = fopen("c:\\temp\\1.txt","a");
-					fprintf (fp, "%d\n",curr_speed); //save as collumn vector
-					fclose(replay_file);
+					
 				
-				}
-			
-		
-		
-		}		
+				}	
+		}
 };
 
 
